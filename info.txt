@@ -1,8 +1,8 @@
 heroku link
-https://powerful-refuge-17380.herokuapp.com/
+https://guarded-plains-20660.herokuapp.com//
 
 To link heroku to your respostory, do this:
 
-git remote add heroku https://git.heroku.com/powerful-refuge-17380.git
+git remote add heroku https://git.heroku.com/guarded-plains-20660.git
 
-Access problem? contact Heroku admin Neo
+Access problem? contact Heroku admin Simon
