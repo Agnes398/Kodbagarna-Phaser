@@ -17,6 +17,10 @@ var config = {
     }
 };
 
+var score = 0;
+var scoreText;
+var coins;
+var bombs;
 var platforms;
 var player;
 var cursors;
@@ -29,12 +33,12 @@ function preload() {
     this.load.image('ground', 'assets/plattform.jpg');
     this.load.image('GKBCoin', 'assets/GKBCoin.png');
     this.load.image('Coin', 'assets/Coin.png');
+    this.load.image('AngryBird', 'assets/angrybird.png');
 
     this.load.spritesheet('SpriteSheet2Limbo', 'assets/SpriteSheet2Limbo.png', { frameWidth: 90.71, frameHeight: 136 });
 }
 function create() {
     this.add.image(800, 425, 'sky');
-    this.add.image(800, 400, 'Coin');
     
     platforms = this.physics.add.staticGroup();
     platforms.create(800, 860, 'ground').setScale(4).refreshBody();
@@ -44,7 +48,7 @@ function create() {
     platforms.create(950, 300, 'ground');
     
 
-    player = this.physics.add.sprite(100, 715, 'SpriteSheet2Limbo');
+    player = this.physics.add.sprite(200, 715, 'SpriteSheet2Limbo');
     player.setCollideWorldBounds(true);
 
     this.anims.create({
@@ -71,8 +75,31 @@ function create() {
         frameRate: 10,
         repeat: -1
     });
+
     cursors = this.input.keyboard.createCursorKeys();
+    
+    coins = this.physics.add.group({
+        key: 'Coin',
+        repeat: 15,
+        setXY: { x: 50, y: 20, stepX: 100 }
+    });
+
+    coins.children.iterate(function (child) {
+
+        //  Give each star a slightly different bounce
+        child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
+
+    });
+
+    bombs = this.physics.add.group();
+    scoreText = this.add.text(16, 16, 'Score: 0', { fontSize: '35px', fill: '#000' });
+    this.physics.add.collider(coins, platforms);
     this.physics.add.collider(player, platforms);
+    this.physics.add.collider(bombs, platforms);
+
+    this.physics.add.overlap(player, coins, collectCoin, null, this);
+    this.physics.add.collider(player, bombs, hitBomb, null, this);
+
 }
 function update() 
 {
@@ -109,26 +136,46 @@ function update()
 
 function WalkLeft() 
 {
-
         player.setVelocityX(-160);
-
         player.anims.play('left', true);
-
-
-        
-
 }
 
 function WalkRight() 
 {
-    if (cursors.right.isDown)
-    {
         player.setVelocityX(160);
-
         player.anims.play('right', true);
-    }
-    else if (cursors.right.isDown == false)
+}
+
+function collectCoin(player, coin) {
+    coin.disableBody(true, true);
+
+    //  Add and update the score
+    score += 1;
+    scoreText.setText('Score: ' + score);
+
+    if (coins.countActive(true) === 0)
     {
-        
+        //  A new batch of stars to collect
+        coins.children.iterate(function (child) {
+
+            child.enableBody(true, child.x, 0, true, true);
+
+        });
+
+        var x = (player.x < 800) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 800);
+        var bomb = bombs.create(x, 16, 'AngryBird');
+        bomb.setBounce(1);
+        bomb.setCollideWorldBounds(true);
+        bomb.setVelocity(Phaser.Math.Between(-150, 150), 20);
+        bomb.allowGravity = false;
+
     }
+}
+function hitBomb (player, bomb)
+{
+    this.physics.pause();
+
+    player.setTint(0xff0000);
+
+    player.anims.play('turn');
 }
