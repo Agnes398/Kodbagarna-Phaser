@@ -16,6 +16,6 @@ app.get('/html', function(req, res) {
     res.sendfile(__dirname + '/Public/index.html');
 });
 app.use(express.static('Public'));
-var server = app.listen(localport, function () {
-    console.log("Server is up and running at " + localport);
+var server = app.listen(port, function () {
+    console.log("Server is up and running at " + port);
 });
