@@ -1,0 +1,35 @@
+
+body{
+    background-image: url(media/CubeWall.jpg);
+    color: white;
+    text-align: center;
+}
+.responsive{
+    width: 100%;
+    max-width: 1920px;
+    height: auto;
+}
+.newsbox{
+    display: block;
+    background: rgba(197, 197, 197, 0.6);
+    margin: 10px;
+    padding: 5px;
+}
+.newsbox h1{
+    size: 50%;
+    
+}
+.newsbox p{
+    size: 100%;
+    text-align: center;
+    margin: 10px 10px;
+    padding: 5px;
+}
+.Game-Title{
+    text-align: center;
+    size: 100%;
+    color: gold;
+    text-decoration: underline;
+    padding: 50px;
+}
+

@@ -8,14 +8,15 @@ const localport = 3000
 
 
 
+app.use(express.static('Public'));
 app.get('/', function (req, res) {
-    res.send('Hello World!');
+    res.sendFile(__dirname +'/Public/index.html');
 });
 
-app.get('/html', function(req, res) {
-    res.sendfile(__dirname + '/Public/index.html');
+app.get('/Angry-Coins', function(req, res) {
+    res.sendfile(__dirname + '/Public/KBgame.html');
 });
-app.use(express.static('Public'));
+
 var server = app.listen(localport, function () {
     console.log("Server is up and running at " + localport);
 });
