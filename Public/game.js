@@ -1,12 +1,12 @@
 
 var config = {
     type: Phaser.AUTO,
-    width: 800,
-    height: 600,
+    width: 1600,
+    height: 850,
     physics: {
         default: 'arcade',
         arcade: {
-            gravity: { y: 200 },
+            gravity: { y: 750 },
             debug: false
         }
     },
@@ -17,6 +17,7 @@ var config = {
     }
 };
 
+var platforms;
 var player;
 var cursors;
 var directionIsLeft;
@@ -25,17 +26,25 @@ var game = new Phaser.Game(config);
 
 function preload() {
     this.load.image('sky', 'assets/sky.png');
-    this.load.image('plattform', 'assets/plattform.jpg');
+    this.load.image('ground', 'assets/plattform.jpg');
     this.load.image('GKBCoin', 'assets/GKBCoin.png');
     this.load.image('Coin', 'assets/Coin.png');
 
     this.load.spritesheet('SpriteSheet2Limbo', 'assets/SpriteSheet2Limbo.png', { frameWidth: 90.71, frameHeight: 136 });
 }
 function create() {
-    this.add.image(400, 300, 'sky');
-    this.add.image(400, 300, 'Coin');
+    this.add.image(800, 425, 'sky');
+    this.add.image(800, 400, 'Coin');
     
-    player = this.physics.add.sprite(100, 450, 'SpriteSheet2Limbo');
+    platforms = this.physics.add.staticGroup();
+    platforms.create(800, 860, 'ground').setScale(4).refreshBody();
+
+    platforms.create(600, 600, 'ground');
+    platforms.create(300, 400, 'ground');
+    platforms.create(950, 300, 'ground');
+    
+
+    player = this.physics.add.sprite(100, 715, 'SpriteSheet2Limbo');
     player.setCollideWorldBounds(true);
 
     this.anims.create({
@@ -63,6 +72,7 @@ function create() {
         repeat: -1
     });
     cursors = this.input.keyboard.createCursorKeys();
+    this.physics.add.collider(player, platforms);
 }
 function update() 
 {
@@ -93,7 +103,7 @@ function update()
 
     if (cursors.up.isDown && player.body.touching.down)
     {
-        player.setVelocityY(-280);
+        player.setVelocityY(-600);
     }
 }
 
