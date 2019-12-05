@@ -31,21 +31,28 @@ var game = new Phaser.Game(config);
 function preload() {
     this.load.image('sky', 'assets/sky.png');
     this.load.image('ground', 'assets/plattform.jpg');
+    this.load.image('ground2', 'assets/plattform2.jpg');
     this.load.image('GKBCoin', 'assets/GKBCoin.png');
     this.load.image('Coin', 'assets/Coin.png');
     this.load.image('AngryBird', 'assets/angrybird.png');
 
-    this.load.spritesheet('SpriteSheet2Limbo', 'assets/SpriteSheet2Limbo.png', { frameWidth: 90.71, frameHeight: 136 });
+    this.load.spritesheet('SpriteSheet2Limbo', 'assets/SpriteLimboLol.png', { frameWidth: 69, frameHeight: 144 });
 }
 function create() {
+    score = 0;
     this.add.image(800, 425, 'sky');
     
     platforms = this.physics.add.staticGroup();
+
     platforms.create(800, 860, 'ground').setScale(4).refreshBody();
 
     platforms.create(600, 600, 'ground');
     platforms.create(300, 400, 'ground');
     platforms.create(950, 300, 'ground');
+    platforms.create(1400, 500, 'ground2');
+    platforms.create(1100, 780, 'ground2');
+    platforms.create(1100, 750, 'ground2');
+    platforms.create(1100, 720, 'ground2');
     
 
     player = this.physics.add.sprite(200, 715, 'SpriteSheet2Limbo');
@@ -136,13 +143,13 @@ function update()
 
 function WalkLeft() 
 {
-        player.setVelocityX(-160);
+        player.setVelocityX(-225);
         player.anims.play('left', true);
 }
 
 function WalkRight() 
 {
-        player.setVelocityX(160);
+        player.setVelocityX(225);
         player.anims.play('right', true);
 }
 
@@ -178,4 +185,6 @@ function hitBomb (player, bomb)
     player.setTint(0xff0000);
 
     player.anims.play('turn');
+
+    this.scene.restart();
 }
