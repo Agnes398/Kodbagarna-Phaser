@@ -24,7 +24,10 @@ var bombs;
 var platforms;
 var player;
 var cursors;
-var directionIsLeft;
+var directionIsLeft = true;
+var jumpIsLeft = true;
+var enterKey;
+var Wait = false;
 
 var game = new Phaser.Game(config);
 
@@ -32,13 +35,13 @@ function preload() {
     this.load.image('sky', 'assets/sky.png');
     this.load.image('ground', 'assets/plattform.jpg');
     this.load.image('ground2', 'assets/plattform2.jpg');
-    this.load.image('GKBCoin', 'assets/GKBCoin.png');
     this.load.image('Coin', 'assets/Coin.png');
     this.load.image('AngryBird', 'assets/angrybird.png');
 
-    this.load.spritesheet('SpriteSheet2Limbo', 'assets/SpriteLimboLol.png', { frameWidth: 69, frameHeight: 144 });
+    this.load.spritesheet('SpriteSheet2Limbo', 'assets/SpriteLimboLol2.png', { frameWidth: 69, frameHeight: 144 });
 }
 function create() {
+
     score = 0;
     this.add.image(800, 425, 'sky');
     
@@ -77,6 +80,30 @@ function create() {
     });
 
     this.anims.create({
+        key: 'jumpleftup',
+        frames: [{key: 'SpriteSheet2Limbo', frame: 14}],
+        frameRate: 20
+    });
+
+    this.anims.create({
+        key: 'jumprightup',
+        frames: [{key: 'SpriteSheet2Limbo', frame: 16}],
+        frameRate: 20
+    });
+
+    this.anims.create({
+        key: 'jumpleftdown',
+        frames: [{key: 'SpriteSheet2Limbo', frame: 15}],
+        frameRate: 20
+    });
+
+    this.anims.create({
+        key: 'jumprightdown',
+        frames: [{key: 'SpriteSheet2Limbo', frame: 17}],
+        frameRate: 20
+    });
+
+    this.anims.create({
         key: 'right',
         frames: this.anims.generateFrameNumbers('SpriteSheet2Limbo', {start: 8, end:13}),
         frameRate: 10,
@@ -84,6 +111,7 @@ function create() {
     });
 
     cursors = this.input.keyboard.createCursorKeys();
+    enterKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER)
     
     coins = this.physics.add.group({
         key: 'Coin',
@@ -110,7 +138,7 @@ function create() {
 }
 function update() 
 {
-
+    
     if (cursors.left.isDown == true && cursors.right.isDown == false) {
         WalkLeft();
         directionIsLeft = true;
@@ -121,36 +149,60 @@ function update()
         directionIsLeft = false;
     }
 
-    else if (cursors.right.isDown == false && cursors.left.isDown == false && directionIsLeft == true) {
-        player.setVelocityX(0);
-        player.anims.play('turnleft');
-    }
-
-    else if (cursors.right.isDown == false && cursors.left.isDown == false && directionIsLeft == false) {
-        player.setVelocityX(0);
-        player.anims.play('turnright');
+    else if (cursors.right.isDown == false && cursors.left.isDown == false || cursors.right.isDown == true && cursors.left.isDown == true) {
+        Stand();
     }
     
-    else if (cursors.right.isDown == true && cursors.left.isDown == true) {
-        player.setVelocityX(0);
-    }
-
+    //Jumps
     if (cursors.up.isDown && player.body.touching.down)
     {
         player.setVelocityY(-600);
     }
+
+    AnimatePlayer();
+
+    if (enterKey.isDown == true && Wait == false) {
+        Wait = true;
+        RestartGame();
+    }
+
 }
+
 
 function WalkLeft() 
 {
-        player.setVelocityX(-225);
-        player.anims.play('left', true);
+    player.setVelocityX(-225);
 }
 
 function WalkRight() 
 {
-        player.setVelocityX(225);
+    player.setVelocityX(225);
+}
+
+function Stand() 
+{
+    player.setVelocityX(0);
+}
+
+function AnimatePlayer() {
+
+    if(cursors.right.isDown == true && cursors.left.isDown == false) {
         player.anims.play('right', true);
+    }
+
+    else if(cursors.right.isDown == false && cursors.left.isDown == true) {
+        player.anims.play('left', true);
+    }
+
+    else if (cursors.right.isDown == false && cursors.left.isDown == false || cursors.right.isDown == true && cursors.left.isDown == true) {
+        if(directionIsLeft == true) {
+        player.anims.play('turnleft', true);
+        }
+        else {
+            player.anims.play('turnright', true);
+        }
+    }
+
 }
 
 function collectCoin(player, coin) {
@@ -185,6 +237,9 @@ function hitBomb (player, bomb)
     player.setTint(0xff0000);
 
     player.anims.play('turn');
+}
 
-    this.scene.restart();
+function RestartGame() {
+    //this.scene.restart();
+    console.log('Restarting. . .');
 }

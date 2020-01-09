@@ -14,7 +14,7 @@ app.get('/', function (req, res) {
 });
 
 app.get('/Angry-Coins', function(req, res) {
-    res.sendfile(__dirname + '/Public/KBgame.html');
+    res.sendFile(__dirname + '/Public/KBgame.html');
 });
 
 var server = app.listen(localport, function () {
