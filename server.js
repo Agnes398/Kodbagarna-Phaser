@@ -3,7 +3,7 @@
 
 const express = require('express')
 const app = express()
-const port = process.env.PORT
+const port = process.env.PORT || 3000
 const localport = 3000
 
 
@@ -17,6 +17,6 @@ app.get('/Angry-Coins', function(req, res) {
     res.sendFile(__dirname + '/Public/KBgame.html');
 });
 
-var server = app.listen(localport, function () {
-    console.log("Server is up and running at " + localport);
+var server = app.listen(port, function () {
+    console.log("Server is up and running at " + port);
 });
