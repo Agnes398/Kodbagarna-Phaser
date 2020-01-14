@@ -17,6 +17,10 @@ app.get('/Angry-Coins', function(req, res) {
     res.sendFile(__dirname + '/Public/KBgame.html');
 });
 
+app.get('/Plattform-Blast', function(req, res) {
+    res.sendFile(__dirname + '/Public/Plattform-Blast/PlattformBlast.html')
+});
+
 var server = app.listen(port, function () {
     console.log("Server is up and running at " + port);
 });
